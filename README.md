@@ -16,7 +16,7 @@ $python api-gateway.py
 s3 writer service: 
 
 ```
-$python s3-writer.py
+$python upload-to-s3.py
 ```
 
 Create kafka on docker:
