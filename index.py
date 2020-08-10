@@ -2,21 +2,23 @@ from flask import Flask, request, jsonify
 import pprint
 from calendar import timegm
 from datetime import datetime
-import _strptime
+from kafka import KafkaProducer
+import json
 
-from producer import init
 
 def convert_to_time_ms(timestamp):
     return 1000 * timegm(datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%S.%fZ').timetuple())
 
+
 app = Flask(__name__)
 app.config["DEBUG"] = True
-p = init()
+producer = KafkaProducer(bootstrap_servers='localhost:9092', value_serializer=lambda v: json.dumps(v).encode('utf-8'))
 
 
 @app.route('/')
 def health_check():
   return 'This service is healthy.'
+
 
 @app.route('/get-my-blessing', methods=['GET'])
 def fortune():
@@ -30,20 +32,16 @@ def fortune():
 def add_message(uuid):
     content = request.get_json()
     pprint.pprint(content)
-    metrics = p.metrics()
+    metrics = producer.metrics()
     pprint.pprint(metrics)
 
-    p.send('my-first-topic', content)
+    producer.send('my-first-topic', content)
     return jsonify({"uuid": uuid})
 
-
-
-#TODO add incoming requests counter & send to metrics.
 
 @app.route('/search', methods=['POST'])
 def search():
   return jsonify(['series', 'series2'])
-
 
 
 @app.route('/query', methods=['POST'])
@@ -64,3 +62,4 @@ def query():
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
 
+#TODO add incoming requests counter & send to metrics.
