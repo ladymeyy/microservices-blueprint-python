@@ -5,12 +5,19 @@ Thin Blueprint of microservices in python containing : REST API, kafka producer/
 Run:
 =====
 
+apigateway service: 
+
 ```
 $pip3 install flask
 $pip3 install kafka-python
-$python index.py
+$python api-gateway.py
 ```
 
+s3 writer service: 
+
+```
+$python s3-writer.py
+```
 
 Create kafka on docker:
 ========================
