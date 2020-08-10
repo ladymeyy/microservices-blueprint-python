@@ -76,3 +76,7 @@ docker run -d -p 3000:3000 \
   grafana/grafana
 ```
 
+### Log into Grafana with admin:admin
+```http://localhost:3000 ```
+
+### Create a datasource in Grafana with type="SimpleJson" and URL="http://docker.for.mac.localhost:5000".
